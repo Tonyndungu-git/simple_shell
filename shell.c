@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/wait.h>
-
+#include "shell.h"
 #define MAX_LINE_LEN 1024
 
 /**
@@ -21,7 +16,9 @@ int main(int argc, char *argv[])
 
 	while (1)
 	{
-		write(1, "#cisfun$ ", 10);
+
+		if (isatty(STDIN_FILENO) == 1)
+			write(1, "#cisfun$ ", 10);
 		if (fgets(line, MAX_LINE_LEN, stdin) == NULL)
 		{
 			break;
@@ -29,6 +26,11 @@ int main(int argc, char *argv[])
 		int arg_count = 0;
 
 		char *token = strtok(line, " \n");
+
+		if (token != NULL && strcmp(token, "exit") == 0)
+		{
+			exit(EXIT_SUCCESS);
+		}
 
 		while (token != NULL)
 		{
